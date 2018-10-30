@@ -17,10 +17,10 @@ type TimelineMessage struct {
 	Content   string
 }
 
-func (tl *Timeline) apply(evt Event) {
+func (tl *Timeline) apply(followees FolloweeSet, evt Event) {
 	switch e := evt.(type) {
 	case MessageQuacked:
-		if e.Author != tl.UserID {
+		if e.Author != tl.UserID && !followees.Contains(e.Author) {
 			return
 		}
 		tl.add(TimelineMessage{
@@ -31,13 +31,13 @@ func (tl *Timeline) apply(evt Event) {
 	}
 }
 
-func GetTimeline(store EventStore, userID UserID) Timeline {
+func GetTimeline(store EventStore, userID UserID, followees FolloweeSet) Timeline {
 	tl := Timeline{
 		UserID:   userID,
 		Messages: make([]TimelineMessage, 0),
 	}
 	for _, evt := range store.All() {
-		tl.apply(evt)
+		tl.apply(followees, evt)
 	}
 	return tl
 }

@@ -44,10 +44,10 @@ func TestWhenQuackTwoMessagesThenIDsAreDifferents(t *testing.T) {
 	var evt1, evt2 quacker.MessageQuacked
 	var ok bool
 	if evt1, ok = tr.Events[0].(quacker.MessageQuacked); !ok {
-		t.Errorf("expected a MessageQuacked event, got %t", tr.Events[0])
+		t.Errorf("expected a MessageQuacked event, got %T", tr.Events[0])
 	}
 	if evt2, ok = tr.Events[1].(quacker.MessageQuacked); !ok {
-		t.Errorf("expected a MessageQuacked event, got %t", tr.Events[1])
+		t.Errorf("expected a MessageQuacked event, got %T", tr.Events[1])
 	}
 	if evt1.ID == evt2.ID {
 		t.Errorf("events ids should be differents")
@@ -71,7 +71,7 @@ func TestGivenAQuackedMessage(t *testing.T) {
 			t.Errorf("expected one event only")
 		}
 		if requack, ok := tr.Events[0].(quacker.MessageRequacked); !ok {
-			t.Errorf("expected event MessageRequacked, got %t", tr.Events[0])
+			t.Errorf("expected event MessageRequacked, got %T", tr.Events[0])
 		} else {
 			if uuid.UUID(mID) != requack.AggregateID() {
 				t.Errorf("expected ID %s, got %s", mID, requack.AggregateID())
@@ -85,7 +85,7 @@ func TestGivenAQuackedMessage(t *testing.T) {
 	t.Run("WhenRequackTwoTimesBySomeElseThenNoMessageRequacked", func(t *testing.T) {
 		var tr *stub.Transaction = stub.NewTransaction()
 		var mRequacked = *m
-		(&mRequacked).Apply(quacker.MessageRequacked{
+		mRequacked.Apply(quacker.MessageRequacked{
 			ID:        mID,
 			Requacker: requacker,
 		})

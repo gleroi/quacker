@@ -39,9 +39,31 @@ func main() {
 			})
 		})
 
-		api.GET("/timeline/:author", func(c *gin.Context) {
-			authorID := c.Param("author")
-			tl := quacker.GetTimeline(store, quacker.UserID(authorID))
+		api.POST("/follow", func(c *gin.Context) {
+			var cmd FollowUser
+			err := c.BindJSON(&cmd)
+			if err != nil {
+				c.AbortWithStatusJSON(http.StatusBadRequest, err)
+				return
+			}
+			tr := memory.NewTransaction(store)
+			defer tr.Commit()
+
+			quacker.Follow(tr, cmd.Follower, cmd.Followee)
+
+			c.JSON(http.StatusOK, gin.H{
+				"status": http.StatusOK,
+			})
+		})
+
+		api.POST("/unfollow", func (c *gin.Context) {
+			
+		})
+
+		api.GET("/timeline/:user", func(c *gin.Context) {
+			userID := quacker.UserID(c.Param("user"))
+			followees := quacker.GetFolloweeList(store, userID)
+			tl := quacker.GetTimeline(store, userID, followees)
 
 			c.JSON(http.StatusOK, tl)
 		})

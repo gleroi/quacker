@@ -37,7 +37,7 @@ func (m *Message) Apply(evt Event) error {
 	case MessageRequacked:
 		m.quackers[mevt.Requacker] = true
 	default:
-		return fmt.Errorf("unexpected event of type %t", evt)
+		return fmt.Errorf("unexpected event of type %T", evt)
 	}
 	return nil
 }
