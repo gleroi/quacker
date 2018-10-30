@@ -14,6 +14,7 @@ func NewSubscriptionID() SubscriptionID {
 }
 
 // Subscription is the relationship between a follower and followee.
+//TODO: subscription should be a value object under the user aggregate
 type Subscription struct {
 	id       SubscriptionID
 	followee UserID
