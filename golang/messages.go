@@ -13,6 +13,10 @@ func NewMessageID() MessageID {
 	return MessageID(uuid.New())
 }
 
+func (id MessageID) String() string {
+	return uuid.UUID(id).String()
+}
+
 // UserID identify a user by its email address.
 type UserID string
 
@@ -48,8 +52,8 @@ func (m MessageQuacked) AggregateID() uuid.UUID {
 	return uuid.UUID(m.ID)
 }
 
-func Quack(events EventPublisher, author UserID, content string) {
-	events.Publish(MessageQuacked{
+func Quack(tr Transaction, author UserID, content string) {
+	tr.Append(MessageQuacked{
 		ID:      NewMessageID(),
 		Author:  author,
 		Content: content,
@@ -65,12 +69,12 @@ func (m MessageRequacked) AggregateID() uuid.UUID {
 	return uuid.UUID(m.ID)
 }
 
-func (m Message) Requack(events EventPublisher, requacker UserID) {
+func (m Message) Requack(tr Transaction, requacker UserID) {
 	if m.quackers[requacker] == true {
 		return
 	}
 
-	events.Publish(MessageRequacked{
+	tr.Append(MessageRequacked{
 		ID:        m.id,
 		Requacker: requacker,
 	})

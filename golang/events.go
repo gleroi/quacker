@@ -9,7 +9,15 @@ type Event interface {
 	AggregateID() uuid.UUID
 }
 
-// EventPublisher publish events from aggregate to others.
-type EventPublisher interface {
-	Publish(evt Event)
+// Transaction store events in before commit or rollback.
+type Transaction interface {
+	Append(evt Event)
+	Commit()
+}
+
+// EventStore stores events for all aggregates
+type EventStore interface {
+	Append(evt Event)
+	Get(aggregateID uuid.UUID) []Event
+	All() []Event
 }
