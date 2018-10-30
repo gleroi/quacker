@@ -23,7 +23,6 @@ func apply(followees map[SubscriptionID]UserID, follower UserID, evt Event) {
 	case UserUnfollowed:
 		delete(followees, e.ID)
 	}
-
 }
 
 func GetFolloweeList(store EventStore, follower UserID) FolloweeSet {
