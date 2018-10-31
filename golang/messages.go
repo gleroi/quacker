@@ -2,6 +2,7 @@ package quacker
 
 import (
 	"fmt"
+	"quacker/event"
 
 	"github.com/google/uuid"
 )
@@ -27,7 +28,7 @@ type Message struct {
 	quackers map[UserID]bool
 }
 
-func (m *Message) Apply(evt Event) error {
+func (m *Message) Apply(evt event.Event) error {
 	switch mevt := evt.(type) {
 	case MessageQuacked:
 		m.id = mevt.ID
@@ -52,7 +53,7 @@ func (m MessageQuacked) AggregateID() uuid.UUID {
 	return uuid.UUID(m.ID)
 }
 
-func Quack(tr Transaction, author UserID, content string) {
+func Quack(tr event.Transaction, author UserID, content string) {
 	tr.Append(MessageQuacked{
 		ID:      NewMessageID(),
 		Author:  author,
@@ -69,7 +70,7 @@ func (m MessageRequacked) AggregateID() uuid.UUID {
 	return uuid.UUID(m.ID)
 }
 
-func (m Message) Requack(tr Transaction, requacker UserID) {
+func (m Message) Requack(tr event.Transaction, requacker UserID) {
 	if m.quackers[requacker] == true {
 		return
 	}

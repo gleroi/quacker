@@ -1,5 +1,7 @@
 package quacker
 
+import "quacker/event"
+
 // FolloweeSet is a read model of whom is followed
 type FolloweeSet struct {
 	followees map[UserID]bool
@@ -13,7 +15,7 @@ func (set FolloweeSet) Contains(user UserID) bool {
 	return active
 }
 
-func apply(followees map[SubscriptionID]UserID, follower UserID, evt Event) {
+func apply(followees map[SubscriptionID]UserID, follower UserID, evt event.Event) {
 	switch e := evt.(type) {
 	case UserFollowed:
 		if e.Follower != follower {
@@ -25,7 +27,7 @@ func apply(followees map[SubscriptionID]UserID, follower UserID, evt Event) {
 	}
 }
 
-func GetFolloweeList(store EventStore, follower UserID) FolloweeSet {
+func GetFolloweeList(store event.EventStore, follower UserID) FolloweeSet {
 	l := FolloweeSet{}
 	followees := make(map[SubscriptionID]UserID)
 	for _, evt := range store.All() {

@@ -1,24 +1,23 @@
-package quacker_test
+package quacker
 
 import (
-	"quacker"
-	"quacker/quacker_test/stub"
+	"quacker/stub"
 	"testing"
 )
 
-var follower = quacker.UserID("follower@mail.com")
-var followee = quacker.UserID("followee@mail.com")
+var follower = UserID("follower@mail.com")
+var followee = UserID("followee@mail.com")
 
 func TestWhenFollowUserThenUserFollowed(t *testing.T) {
 	tr := stub.NewTransaction()
 
-	quacker.Follow(tr, follower, followee)
+	Follow(tr, follower, followee)
 
 	if len(tr.Events) != 1 {
 		t.Fatalf("expected 1 event, got %d", len(tr.Events))
 	}
-	if evt, ok := tr.Events[0].(quacker.UserFollowed); !ok {
-		t.Errorf("expected %T, got %T", quacker.UserFollowed{}, tr.Events[0])
+	if evt, ok := tr.Events[0].(UserFollowed); !ok {
+		t.Errorf("expected %T, got %T", UserFollowed{}, tr.Events[0])
 	} else {
 		if evt.Follower != follower {
 			t.Errorf("expected %s, got %s", follower, evt.Follower)

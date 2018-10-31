@@ -26,7 +26,6 @@ func main() {
 			var cmd QuackMessage
 			err := c.BindJSON(&cmd)
 			if err != nil {
-				c.AbortWithStatusJSON(http.StatusBadRequest, err)
 				return
 			}
 			tr := memory.NewTransaction(store)
@@ -43,7 +42,6 @@ func main() {
 			var cmd FollowUser
 			err := c.BindJSON(&cmd)
 			if err != nil {
-				c.AbortWithStatusJSON(http.StatusBadRequest, err)
 				return
 			}
 			tr := memory.NewTransaction(store)
@@ -56,8 +54,8 @@ func main() {
 			})
 		})
 
-		api.POST("/unfollow", func (c *gin.Context) {
-			
+		api.POST("/unfollow", func(c *gin.Context) {
+
 		})
 
 		api.GET("/timeline/:user", func(c *gin.Context) {

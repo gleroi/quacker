@@ -1,23 +1,23 @@
 package memory
 
 import (
-	"quacker"
+	"quacker/event"
 )
 
 // Transaction is a in-memory transaction for EventStore
 type Transaction struct {
-	events []quacker.Event
-	store  quacker.EventStore
+	events []event.Event
+	store  event.EventStore
 }
 
-func NewTransaction(store quacker.EventStore) *Transaction {
+func NewTransaction(store event.EventStore) *Transaction {
 	return &Transaction{
-		events: make([]quacker.Event, 0),
+		events: make([]event.Event, 0),
 		store:  store,
 	}
 }
 
-func (p *Transaction) Append(evt quacker.Event) {
+func (p *Transaction) Append(evt event.Event) {
 	p.events = append(p.events, evt)
 }
 

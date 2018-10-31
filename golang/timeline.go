@@ -1,5 +1,7 @@
 package quacker
 
+import "quacker/event"
+
 // Timeline is a read model of the messages received by a user
 type Timeline struct {
 	UserID   UserID
@@ -17,7 +19,7 @@ type TimelineMessage struct {
 	Content   string
 }
 
-func (tl *Timeline) apply(followees FolloweeSet, evt Event) {
+func (tl *Timeline) apply(followees FolloweeSet, evt event.Event) {
 	switch e := evt.(type) {
 	case MessageQuacked:
 		if e.Author != tl.UserID && !followees.Contains(e.Author) {
@@ -31,7 +33,7 @@ func (tl *Timeline) apply(followees FolloweeSet, evt Event) {
 	}
 }
 
-func GetTimeline(store EventStore, userID UserID, followees FolloweeSet) Timeline {
+func GetTimeline(store event.EventStore, userID UserID, followees FolloweeSet) Timeline {
 	tl := Timeline{
 		UserID:   userID,
 		Messages: make([]TimelineMessage, 0),

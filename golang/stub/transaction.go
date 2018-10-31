@@ -1,21 +1,21 @@
 package stub
 
 import (
-	"quacker"
+	"quacker/event"
 )
 
 // Transaction is a in-memory event store transactions
 type Transaction struct {
-	Events []quacker.Event
+	Events []event.Event
 }
 
 func NewTransaction() *Transaction {
 	return &Transaction{
-		Events: make([]quacker.Event, 0),
+		Events: make([]event.Event, 0),
 	}
 }
 
-func (p *Transaction) Append(evt quacker.Event) {
+func (p *Transaction) Append(evt event.Event) {
 	p.Events = append(p.Events, evt)
 }
 

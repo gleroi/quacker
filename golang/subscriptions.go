@@ -2,6 +2,7 @@ package quacker
 
 import (
 	"fmt"
+	"quacker/event"
 
 	"github.com/google/uuid"
 )
@@ -21,7 +22,7 @@ type Subscription struct {
 	follower UserID
 }
 
-func (s *Subscription) Apply(evt Event) error {
+func (s *Subscription) Apply(evt event.Event) error {
 	switch e := evt.(type) {
 	case UserFollowed:
 		s.id = e.ID
@@ -43,7 +44,7 @@ func (e UserFollowed) AggregateID() uuid.UUID {
 	return uuid.UUID(e.ID)
 }
 
-func Follow(tr Transaction, follower UserID, followee UserID) {
+func Follow(tr event.Transaction, follower UserID, followee UserID) {
 	tr.Append(UserFollowed{
 		ID:       NewSubscriptionID(),
 		Follower: follower,
@@ -59,7 +60,7 @@ func (e UserUnfollowed) AggregateID() uuid.UUID {
 	return uuid.UUID(e.ID)
 }
 
-func (s Subscription) Unfollow(tr Transaction) {
+func (s Subscription) Unfollow(tr event.Transaction) {
 	tr.Append(UserUnfollowed{
 		ID: s.id,
 	})

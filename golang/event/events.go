@@ -1,4 +1,4 @@
-package quacker
+package event
 
 import (
 	"github.com/google/uuid"
