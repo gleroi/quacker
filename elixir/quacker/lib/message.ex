@@ -16,4 +16,7 @@ defmodule Message do
     def quack(authorID, content) do
         %MessageQuacked{ID: new_id(), authorID: authorID, content: content}
     end
+
+    defstruct [:ID, :authorID, :content]
+
 end
